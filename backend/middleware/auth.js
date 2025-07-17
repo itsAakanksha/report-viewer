@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ak secret key';
+const JWT_SECRET = process.env.JWT_SECRET || 'key';
 
 const ROLES = {
   VIEWER: 'viewer',
