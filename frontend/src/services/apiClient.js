@@ -1,6 +1,10 @@
-// Base API client configuration
-const API_BASE_URL = import.meta.env.BACKEND_URL || 'http://localhost:3001/api';
 
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001/api';
+const reviewerTokens = import.meta.env.VITE_JWT_REVIEWER || "jwt-token-for-reviewer";
+const viewerTokens = import.meta.env.VITE_JWT_VIEWER || "jwt-token-for-viewer";
+console.log("reviewerTokens", reviewerTokens);
+console.log("viewerTokens", viewerTokens);
 // HTTP client with error handling
 class ApiClient {
   constructor(baseURL) {
@@ -9,8 +13,6 @@ class ApiClient {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const viewerTokens = import.meta.env.JWT_VIEWER || "jwt-token-for-viewer";
-    const reviewerTokens = import.meta.env.JWT_REVIEWER || "jwt-token-for-reviewer";
 
     const config = {
       headers: {
