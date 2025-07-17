@@ -40,7 +40,7 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(compression());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || 'https://report-viewer-smoky.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Trace-Id'],
   credentials: true
