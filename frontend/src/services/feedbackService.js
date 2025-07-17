@@ -17,7 +17,7 @@ export const feedbackService = {
       return response.data;
     } catch (error) {
       console.error('Failed to submit feedback:', error);
-      throw new Error('Failed to submit feedback. Please try again.');
+      throw new Error('Access denied');
     }
   },
 

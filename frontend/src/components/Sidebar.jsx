@@ -17,12 +17,18 @@ import {
     Sun
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose, isMobile }) => {
     const [isAiAgentsExpanded, setIsAiAgentsExpanded] = useState(false);
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className={`w-64 h-screen overflow-y-hidden flex flex-col transition-all duration-300 ${
+        <div className={`${
+            isMobile 
+                ? `fixed inset-y-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
+                    isOpen ? 'translate-x-0' : 'translate-x-full'
+                  }`
+                : 'relative'
+        } w-64 h-screen overflow-y-auto flex flex-col transition-all duration-300 ${
             theme === 'dark' 
                 ? 'bg-gradient-to-b from-[#3F1470] to-[#2A0E4F] text-white' 
                 : 'bg-gradient-to-b from-[#FFA301] to-[#FF8C00] text-black'
@@ -33,7 +39,7 @@ const Sidebar = () => {
             }`}>
                 <div className="flex items-center justify-center mb-6">
                     <div className="flex items-center space-x-2">
-                     <img src="https://app.perceivenow.ai/static/media/logo.9e4f8d983654c596a019d99965c9c4ab.svg" alt="" />
+                     <img src="https://app.perceivenow.ai/static/media/logo.9e4f8d983654c596a019d99965c9c4ab.svg" alt="" className="max-w-full h-auto" />
                     </div>
                 </div>
 

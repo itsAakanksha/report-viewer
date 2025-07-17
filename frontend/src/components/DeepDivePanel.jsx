@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, TrendingUp, MessageSquare, Send, ChevronDown, ChevronUp, ExternalLink, Flag, AlertTriangle } from 'lucide-react';
+import { X, Shield, TrendingUp, MessageSquare, Send, ChevronDown, ChevronUp, ExternalLink, Flag, AlertTriangle, Heart, Star, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -118,7 +118,7 @@ const SourceCard = ({ source, isExpanded, onToggle }) => {
 
 
 
-const DeepDivePanel = ({ report, isOpen, onClose }) => {
+const DeepDivePanel = ({ report, isOpen, onClose, isMobile }) => {
   const [expandedSources, setExpandedSources] = useState({});
   const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -153,9 +153,21 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
 
           {/* Panel */}
           <motion.div
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
+            initial={{ 
+              x: isMobile ? '0%' : '100%', 
+              y: isMobile ? '100%' : '0%',
+              opacity: 0 
+            }}
+            animate={{ 
+              x: '0%', 
+              y: '0%',
+              opacity: 1 
+            }}
+            exit={{ 
+              x: isMobile ? '0%' : '100%', 
+              y: isMobile ? '100%' : '0%',
+              opacity: 0 
+            }}
             transition={{ 
               type: 'spring', 
               damping: 25, 
@@ -163,14 +175,18 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
               duration: 0.5,
               ease: "easeOut"
             }}
-            className="fixed right-0 top-0 h-full w-full max-w-2xl bg-gradient-to-br from-background to-background/95 backdrop-blur-sm border-l border-border/50 z-50 flex flex-col shadow-2xl"
+            className={`fixed z-50 flex flex-col shadow-2xl ${
+              isMobile 
+                ? 'inset-0 bg-background' 
+                : 'right-0 top-0 h-full w-full max-w-2xl bg-gradient-to-br from-background to-background/95 backdrop-blur-sm border-l border-border/50'
+            }`}
           >
             {/* Header */}
             <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1, duration: 0.4 }}
-              className="p-6 border-b border-border/50 bg-gradient-to-r from-[#3F1470]/5 to-[#5A1F9B]/5 dark:from-[#FFA301]/5 dark:to-[#FF8C00]/5 backdrop-blur-sm"
+              className="p-4 md:p-6 border-b border-border/50 bg-gradient-to-r from-[#3F1470]/5 to-[#5A1F9B]/5 dark:from-[#FFA301]/5 dark:to-[#FF8C00]/5 backdrop-blur-sm"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1 mr-4">
@@ -178,7 +194,7 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.4 }}
-                    className="flex items-center gap-2 mb-3"
+                    className="flex items-center gap-2 mb-3 flex-wrap"
                   >
                     <Badge variant="outline" className="bg-[#3F1470]/10 dark:bg-[#FFA301]/10 border-[#3F1470]/30 dark:border-[#FFA301]/30">
                       {report.reportType}
@@ -191,7 +207,9 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.4 }}
-                    className="text-xl font-semibold line-clamp-2 bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] bg-clip-text text-transparent"
+                    className={`font-semibold bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] bg-clip-text text-transparent ${
+                      isMobile ? 'text-lg line-clamp-3' : 'text-xl line-clamp-2'
+                    }`}
                   >
                     {report.title}
                   </motion.h1>
@@ -199,7 +217,9 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.4 }}
-                    className="text-sm text-muted-foreground mt-2 flex items-center gap-2"
+                    className={`text-muted-foreground mt-2 flex items-center gap-2 ${
+                      isMobile ? 'text-xs flex-wrap' : 'text-sm'
+                    }`}
                   >
                     <span>By {report.author}</span>
                     <span>•</span>
@@ -225,7 +245,7 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent hover:scrollbar-thumb-muted/80">
-              <div className="p-6 space-y-6">
+              <div className={`space-y-6 ${isMobile ? 'p-4' : 'p-6'}`}>
                 {/* Summary */}
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
@@ -233,22 +253,28 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
                   transition={{ delay: 0.3, duration: 0.5 }}
                 >
                   <Card className="border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="  rounded-t-lg">
+                    <CardHeader className="rounded-t-lg">
                       <CardTitle className="flex items-center gap-2">
                         <div className="p-2 rounded-lg bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00]">
                           <TrendingUp className="h-4 w-4 text-white" />
                         </div>
-                        <span className="text-[#3F1470] dark:text-[#FFA301]">Report Summary</span>
+                        <span className={`text-[#3F1470] dark:text-[#FFA301] ${
+                          isMobile ? 'text-base' : 'text-lg'
+                        }`}>Report Summary</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <p className="text-muted-foreground leading-relaxed text-sm">
+                      <p className={`text-muted-foreground leading-relaxed ${
+                        isMobile ? 'text-sm' : 'text-sm'
+                      }`}>
                         {report.summary}
                       </p>
                       {report.details && (
                         <div className="mt-6 space-y-4">
                           <div className="bg-muted/30 rounded-lg p-4">
-                            <h4 className="font-medium mb-3 text-sm text-[#3F1470] dark:text-[#FFA301]">Key Findings:</h4>
+                            <h4 className={`font-medium mb-3 text-[#3F1470] dark:text-[#FFA301] ${
+                              isMobile ? 'text-sm' : 'text-sm'
+                            }`}>Key Findings:</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                               {report.details.keyFindings.map((finding, index) => (
                                 <motion.li 
@@ -264,7 +290,7 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
                               ))}
                             </ul>
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                             <div className="bg-muted/20 rounded-lg p-3">
                               <span className="font-medium text-sm text-[#3F1470] dark:text-[#FFA301]">Methodology:</span>
                               <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
@@ -353,21 +379,28 @@ const DeepDivePanel = ({ report, isOpen, onClose }) => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9, duration: 0.5 }}
-              className="p-6 border-t border-border/50 bg-gradient-to-r from-[#3F1470]/5 to-[#5A1F9B]/5 dark:from-[#FFA301]/5 dark:to-[#FF8C00]/5 backdrop-blur-sm"
+              className={`border-t border-border/50 bg-gradient-to-r from-[#3F1470]/5 to-[#5A1F9B]/5 dark:from-[#FFA301]/5 dark:to-[#FF8C00]/5 backdrop-blur-sm ${
+                isMobile ? 'p-4' : 'p-6'
+              }`}
             >
               <Dialog open={feedbackDialogOpen} onOpenChange={setFeedbackDialogOpen}>
                 <DialogTrigger asChild>
                   <Button 
-                    className="w-full h-12 bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] hover:from-[#3F1470]/90 hover:to-[#5A1F9B]/90 dark:hover:from-[#FFA301]/90 dark:hover:to-[#FF8C00]/90 text-white font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                    className={`w-full bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] hover:from-[#3F1470]/90 hover:to-[#5A1F9B]/90 dark:hover:from-[#FFA301]/90 dark:hover:to-[#FF8C00]/90 text-white font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ${
+                      isMobile ? 'h-12 text-sm' : 'h-12'
+                    }`}
                   >
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Provide Feedback
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Share Your Thoughts
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className={`${isMobile ? 'max-w-[95vw] max-h-[80vh]' : 'max-w-2xl'}`}>
                   <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-[#3F1470] dark:text-[#FFA301]">
-                      Share Your Feedback
+                    <DialogTitle className={`font-semibold text-[#3F1470] dark:text-[#FFA301] ${
+                      isMobile ? 'text-lg' : 'text-xl'
+                    } flex items-center gap-2`}>
+                      <Sparkles className="h-5 w-5" />
+                      Share Your Thoughts
                     </DialogTitle>
                   </DialogHeader>
                   <FeedbackForm

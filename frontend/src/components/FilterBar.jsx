@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Search, Filter, X, ChevronDown, SlidersHorizontal, Menu } from 'lucide-react';
 import { api } from '@/services';
 
-const FilterBar = ({ onFiltersChange, activeFilters }) => {
+const FilterBar = ({ onFiltersChange, activeFilters, onToggleSidebar, isMobile }) => {
   const [filterOptions, setFilterOptions] = useState({
     reportTypes: [],
     industries: [],
@@ -82,7 +82,7 @@ const FilterBar = ({ onFiltersChange, activeFilters }) => {
   }
 
   return (
-    <div className=" border-b border-border/50 backdrop-blur-sm p-4 md:px-12 md:py-8">
+    <div className="border-b border-border/50 backdrop-blur-sm p-4 md:px-12 md:py-8">
       <div className="container mx-auto">
         <div className="flex flex-col space-y-6">
           {/* Header */}
@@ -90,33 +90,45 @@ const FilterBar = ({ onFiltersChange, activeFilters }) => {
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] shadow-lg">
               <SlidersHorizontal className="h-5 w-5 text-white" />
             </div>
-            <div>
+            <div className="flex-1">
               <h2 className="text-lg font-semibold text-[#3F1470] dark:text-[#FFA301]">
                 Filter & Search
               </h2>
-              <p className="text-sm text-muted-foreground">Find the perfect reports for your needs</p>
+              <p className="text-sm text-muted-foreground hidden sm:block">Find the perfect reports for your needs</p>
             </div>
+            
+            {/* Mobile Menu Button - Right Side */}
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleSidebar}
+                className="p-2 h-10 w-10 ml-2"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
           </div>
 
           {/* Search and Filter Controls */}
           <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
-            <div className="relative flex-1 max-w-md">
+            <div className="relative w-full lg:flex-1 lg:max-w-md">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search reports, keywords, or topics..."
+                placeholder="Search reports, keywords..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="pl-11 h-11 bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
               />
             </div>
             
-            <div className="flex items-center space-x-3 flex-wrap">
+            <div className="flex items-center space-x-3 flex-wrap w-full lg:w-auto">
               <Select
                 value={activeFilters.reportType || 'all'}
                 onValueChange={(value) => handleFilterChange('reportType', value)}
               >
-                <SelectTrigger className="h-11 min-w-[140px] bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
-                  <SelectValue placeholder="All Types" />
+                <SelectTrigger className="h-11 min-w-[120px] flex-1 sm:flex-none bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
+                  <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 rounded-xl shadow-2xl">
                   <SelectItem value="all" className="hover:bg-[#3F1470]/10 dark:hover:bg-[#FFA301]/10 rounded-lg">All Types</SelectItem>
@@ -130,8 +142,8 @@ const FilterBar = ({ onFiltersChange, activeFilters }) => {
                 value={activeFilters.industry || 'all'}
                 onValueChange={(value) => handleFilterChange('industry', value)}
               >
-                <SelectTrigger className="h-11 min-w-[140px] bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
-                  <SelectValue placeholder="All Industries" />
+                <SelectTrigger className="h-11 min-w-[120px] flex-1 sm:flex-none bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
+                  <SelectValue placeholder="Industry" />
                 </SelectTrigger>
                 <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 rounded-xl shadow-2xl">
                   <SelectItem value="all" className="hover:bg-[#3F1470]/10 dark:hover:bg-[#FFA301]/10 rounded-lg">All Industries</SelectItem>
@@ -145,8 +157,8 @@ const FilterBar = ({ onFiltersChange, activeFilters }) => {
                 value={activeFilters.confidenceScore || 'all'}
                 onValueChange={(value) => handleFilterChange('confidenceScore', value)}
               >
-                <SelectTrigger className="h-11 min-w-[140px] bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
-                  <SelectValue placeholder="All Confidence" />
+                <SelectTrigger className="h-11 min-w-[120px] flex-1 sm:flex-none bg-background/80 backdrop-blur-sm border-border/50 focus:border-[#3F1470] dark:focus:border-[#FFA301] focus:ring-2 focus:ring-[#3F1470]/20 dark:focus:ring-[#FFA301]/20 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
+                  <SelectValue placeholder="Confidence" />
                 </SelectTrigger>
                 <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 rounded-xl shadow-2xl">
                   {filterOptions.confidenceRanges.map(range => (

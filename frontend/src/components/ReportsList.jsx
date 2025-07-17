@@ -75,7 +75,8 @@ const ReportsList = ({ filters, onReportClick }) => {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 md:px-12 py-6 md:py-8">
-        <div className="bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-lg">
+        {/* Desktop Loading */}
+        <div className="hidden md:block bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-lg">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] text-white">
@@ -95,12 +96,34 @@ const ReportsList = ({ filters, onReportClick }) => {
                     <td className="p-4 md:p-6"><Skeleton className="h-4 w-24" /></td>
                     <td className="p-4 md:p-6"><Skeleton className="h-4 w-16" /></td>
                     <td className="p-4 md:p-6"><Skeleton className="h-4 w-32" /></td>
-                    <td className="p-4 md:p-6"><Skeleton className="h-4 w-20" /></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Mobile Loading */}
+        <div className="md:hidden space-y-4">
+          {[...Array(4)].map((_, index) => (
+            <div key={index} className="bg-white dark:bg-card rounded-lg border border-border p-4 shadow-sm">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-2/3" />
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -141,15 +164,16 @@ const ReportsList = ({ filters, onReportClick }) => {
   return (
     <div className="container mx-auto px-4 md:px-12 py-6 md:py-8">
       <div className="flex items-center justify-between mb-6 md:mb-8">
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-xl md:text-2xl font-semibold">
           Reports ({totalReports})
         </h2>
-        <div className="text-sm text-muted-foreground">
-          Showing {reports.length} of {totalReports} reports
+        <div className="text-xs md:text-sm text-muted-foreground">
+          Showing {reports.length} of {totalReports}
         </div>
       </div>
 
-      <div className="bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-lg">
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-[#3F1470] to-[#5A1F9B] dark:from-[#FFA301] dark:to-[#FF8C00] text-white">
@@ -187,11 +211,11 @@ const ReportsList = ({ filters, onReportClick }) => {
                         </p>
                       </div>
                     </td>
-                        <td className="p-4 md:p-6">
-                        <Badge variant="outline" className="text-xs ">
-                            {report.reportType}
-                        </Badge>
-                        </td>
+                    <td className="p-4 md:p-6">
+                      <Badge variant="outline" className="text-xs">
+                        {report.reportType}
+                      </Badge>
+                    </td>
                     <td className="p-4 md:p-6">
                       <Badge variant="secondary" className="text-xs">
                         {report.industry}
@@ -206,7 +230,6 @@ const ReportsList = ({ filters, onReportClick }) => {
                         </span>
                       </div>
                     </td>
-         
                     <td className="p-4 md:p-6">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -219,6 +242,63 @@ const ReportsList = ({ filters, onReportClick }) => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        <AnimatePresence mode="wait">
+          {reports.map((report, index) => (
+            <motion.div
+              key={report.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ 
+                duration: 0.3, 
+                delay: index * 0.05,
+                ease: "easeOut"
+              }}
+              className="bg-white dark:bg-card rounded-lg border border-border p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
+              onClick={() => onReportClick(report)}
+            >
+              <div className="space-y-3">
+                {/* Header with badges */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <h3 className="font-medium text-foreground line-clamp-2 text-sm leading-tight">
+                      {report.title}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className={`w-2 h-2 rounded-full ${getConfidenceColor(report.confidenceScore)}`} />
+                    <span className="text-xs font-medium">{report.confidenceScore}%</span>
+                  </div>
+                </div>
+
+                {/* Summary */}
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                  {report.summary}
+                </p>
+
+                {/* Badges and meta info */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge variant="outline" className="text-xs py-0.5 px-2">
+                      {report.reportType}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs py-0.5 px-2">
+                      {report.industry}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar className="h-3 w-3" />
+                    <span>{formatDate(report.date)}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
