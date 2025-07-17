@@ -9,10 +9,9 @@ class ApiClient {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const viewerTokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ2aWV3ZXIiLCJyb2xlIjoidmlld2VyIiwiaWF0IjoxNzUyNzQ3OTg1LCJleHAiOjE3NTc5MzE5ODV9.LZ8D1FrT6h7ZXtV2xKaF9Pd3bFluuwepuhXKFEx8dWk'
+    const viewerTokens = import.meta.env.JWT_VIEWER || "jwt-token-for-viewer";
+    const reviewerTokens = import.meta.env.JWT_REVIEWER || "jwt-token-for-reviewer";
 
-    const reviewerTokens = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyZXZpZXdlciIsInJvbGUiOiJyZXZpZXdlciIsImlhdCI6MTc1Mjc1MDIyMiwiZXhwIjoxNzU3OTM0MjIyfQ.JPfXuCJaynDvCkpTFQPayh9O3MSis1rz-915q80Q2Q4"
-   
     const config = {
       headers: {
         'Content-Type': 'application/json',
