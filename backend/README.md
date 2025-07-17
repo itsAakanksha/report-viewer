@@ -8,7 +8,7 @@
 
 2. **Run the server**
    ```bash
-   npm run dev
+   npm start
    ```
 
 3. **Server will start on**
