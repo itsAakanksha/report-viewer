@@ -3,8 +3,7 @@
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001/api';
 const reviewerTokens = import.meta.env.VITE_JWT_REVIEWER || "jwt-token-for-reviewer";
 const viewerTokens = import.meta.env.VITE_JWT_VIEWER || "jwt-token-for-viewer";
-console.log("reviewerTokens", reviewerTokens);
-console.log("viewerTokens", viewerTokens);
+
 // HTTP client with error handling
 class ApiClient {
   constructor(baseURL) {
